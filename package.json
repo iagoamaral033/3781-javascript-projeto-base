@@ -1,0 +1,20 @@
+{
+  "name": "3781-javascript-projeto-base",
+  "version": "1.0.0",
+  "description": "![Thumbnail](./thumb.png)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iagoamaral033/3781-javascript-projeto-base.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iagoamaral033/3781-javascript-projeto-base/issues"
+  },
+  "homepage": "https://github.com/iagoamaral033/3781-javascript-projeto-base#readme"
+}
