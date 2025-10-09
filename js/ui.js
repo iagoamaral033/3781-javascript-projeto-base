@@ -7,6 +7,9 @@ const ui = {
     document.getElementById("pensamento-id").value = pensamento.id
     document.getElementById("pensamento-conteudo").value = pensamento.conteudo
     document.getElementById("pensamento-autoria").value = pensamento.autoria
+    const data = pensamento.date.split('/')
+    const dataFormatada = new Date(data[2], data[1] - 1, data[0]).toISOString().split('T')[0]
+    document.getElementById("pensamento-data").value = dataFormatada
   },
 
   limparFormulario() {
@@ -19,11 +22,11 @@ const ui = {
     listaPensamentos.innerHTML = ""
 
     try {
-      let pensamentosParaRenderizar 
-      
+      let pensamentosParaRenderizar
+
       if (pensamentosFiltrados) {
         pensamentosParaRenderizar = pensamentosFiltrados
-      }else {
+      } else {
         pensamentosParaRenderizar = await api.buscarPensamentos()
       }
 
@@ -31,13 +34,23 @@ const ui = {
         mensagemVazia.style.display = "block"
       } else {
         mensagemVazia.style.display = "none"
-        pensamentosParaRenderizar.forEach(ui.adicionarPensamentoNaLista)
+        pensamentosParaRenderizar
+          .slice()
+          .sort((a, b) => {
+            const [diaA, mesA, anoA] = a.date.split('/').map(Number)
+            const [diaB, mesB, anoB] = b.date.split('/').map(Number)
+            const dataA = new Date(anoA, mesA - 1, diaA)
+            const dataB = new Date(anoB, mesB - 1, diaB)
+            return dataB - dataA // mais novo primeiro
+          })
+          .forEach(ui.adicionarPensamentoNaLista)
       }
-      }
-      catch {
-        alert('Erro ao renderizar pensamentos')
-      }
-      },
+    }
+    catch (error) {
+      console.error(error)
+      alert('Erro ao renderizar pensamentos')
+    }
+  },
 
   adicionarPensamentoNaLista(pensamento) {
     const listaPensamentos = document.getElementById("lista-pensamentos")
@@ -83,16 +96,46 @@ const ui = {
     iconeExcluir.alt = "Excluir"
     botaoExcluir.appendChild(iconeExcluir)
 
+    const botaoFavorito = document.createElement("button")
+    botaoFavorito.classList.add("botao-favorito")
+    botaoFavorito.onclick = async () => {
+      try {
+        await api.atualizarFavorito(pensamento.id, !pensamento.favorito)
+        ui.renderizarPensamentos()
+      } catch (error) {
+        alert('Erro ao favoritar pensamento')
+      }
+    }
+    
+    const iconeFavorito = document.createElement("img")
+    iconeFavorito.src = pensamento.favorito ? 
+    "assets/imagens/icone-favorito.png" :
+    "assets/imagens/icone-favorito_outline.png"
+    iconeFavorito.alt = "Ícone de favorito"
+    botaoFavorito.appendChild(iconeFavorito)
+
+    const divRodape = document.createElement("div")
+    divRodape.classList.add("rodape-pensamento")
+
+    const textoData = document.createElement("p")
+    textoData.classList.add("texto-data")
+    
+    textoData.textContent = pensamento.date
+    divRodape.appendChild(textoData)
+ 
     const icones = document.createElement("div")
     icones.classList.add("icones")
+    icones.appendChild(botaoFavorito)
     icones.appendChild(botaoEditar)
     icones.appendChild(botaoExcluir)
 
+    divRodape.appendChild(icones)
+    pensamentoConteudo.appendChild(divRodape)
 
     li.appendChild(iconeAspas)
     li.appendChild(pensamentoConteudo)
     li.appendChild(pensamentoAutoria)
-    li.appendChild(icones)
+    li.appendChild(divRodape)
     listaPensamentos.appendChild(li)
   },
 }

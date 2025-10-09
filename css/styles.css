@@ -46,7 +46,6 @@ main {
   background-color: #F4F4F4;
 }
 
-
 header {
   padding: 112px 240px 112px 360px;
   background: var(--Azul-Dark, #041832);
@@ -130,7 +129,7 @@ h2, h3 {
   margin-top: 56px;
   width: 100%; 
   max-width: 600px; 
-  margin: 56px auto;   /* <-- esta linha sobrescreve o margin-top acima */
+  margin: 56px auto; 
   padding: 0 16px; 
 }
 
@@ -153,7 +152,7 @@ h2, h3 {
   height: 24px;
 }
 
-#pensamento-conteudo, #pensamento-autoria #pensamento-data {
+#pensamento-conteudo, #pensamento-autoria, #pensamento-data {
   padding: 16px;
   border-radius: 8px;
   background: var(--Cinza-claro, #EDF0F4);
@@ -175,7 +174,7 @@ h2, h3 {
   line-height: normal;
 }
 
-#pensamento-conteudo::placeholder,  #pensamento-autoria::placeholder{
+#pensamento-conteudo::placeholder,  #pensamento-autoria::placeholder {
   color: var(--Cinza-medio, #8F8F8F);
   font-family: "Poppins", sans-serif;
   font-size: 16px;
@@ -235,8 +234,9 @@ h2, h3 {
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
   row-gap: 32px;
+  column-gap: 24px;
 }
 
 .li-pensamento {
@@ -247,7 +247,6 @@ h2, h3 {
   flex: 1 1 calc(33.333% - 24px);
   max-width: calc(33.333% - 24px);
   min-width: 384px;
-  min-height: 315px; 
   display: flex;
   flex-direction: column;
   overflow-wrap: break-word;
@@ -263,7 +262,7 @@ h2, h3 {
   height: 50px;
 }
 
-.pensamento-conteudo, .pensamento-autoria {
+.pensamento-conteudo, .pensamento-autoria, .pensamento-data {
   margin-left: 20px; 
   color: var(--Cinza, #444);
   font-family: "Roboto Mono";
@@ -286,23 +285,24 @@ h2, h3 {
   font-weight: 600;
 }
 
-.icones {
+.pensamento-data {
+  font-size: 18px;
+  font-weight: 400;
+  text-align: end;
+}
+
+/* .icones {
   position: absolute;
   bottom: 16px;
   right: 16px;
-}
+} */
 
-.botao-editar, .botao-excluir {
+.botao-editar, .botao-excluir, .botao-favorito {
   background: none;
   border: none;
   cursor: pointer;
   padding: 8px;
   margin-left: 8px;
-}
-
-.botao-editar img, .botao-excluir img {
-  width: 20px;
-  height: 20px;
 }
 
 span {
@@ -315,7 +315,7 @@ span {
 .mensagem-vazia {
   display: none;
   text-align: center;
-  color: vaz(--Azul-Dark, #041832);
+  color: var(--Azul-Dark, #041832);
   margin-top: 40px;
 }
 
@@ -328,6 +328,15 @@ span {
   font-family: "Poppins", sans-serif;
   font-size: 22px;
   font-weight: 400;
-  line-height: normal;
+  line-height: 33px;
   text-align: center;
+}
+
+.rodape-pensamento {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    justify-content: space-between;
+    align-items: center;
 }

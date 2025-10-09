@@ -18,12 +18,21 @@ async function manipularSubmissaoFormulario(event) {
   const id = document.getElementById("pensamento-id").value
   const conteudo = document.getElementById("pensamento-conteudo").value
   const autoria = document.getElementById("pensamento-autoria").value
+  const data = document.getElementById("pensamento-data").value
+
+  if (!validarData(data)) {
+    alert("Não é permitido inserir uma data futura.")
+    return
+  }
+
+  const [ano, mes, dia] = data.split('-')
+  const dataFormatada = `${dia}/${mes}/${ano}`
 
   try { 
     if(id) {
-      await api.editarPensamento({ id, conteudo, autoria })
+      await api.editarPensamento({ id, conteudo, autoria, date: dataFormatada})
     } else {
-      await api.salvarPensamento({ conteudo, autoria })
+      await api.salvarPensamento({ conteudo, autoria, date: dataFormatada})
     }
     ui.renderizarPensamentos()
   }
@@ -44,4 +53,10 @@ async function manipularBusca() {
   } catch (error) {
     alert("Erro ao buscar pensamentos") 
   }
+}
+
+function validarData(data) {
+  const dataAtual = new Date();
+  const dataInput = new Date(data);
+  return dataInput <= dataAtual;
 }
