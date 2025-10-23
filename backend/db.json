@@ -1,12 +1,6 @@
 {
   "pensamentos": [
     {
-      "id": "2a56",
-      "conteudo": "vazia ",
-      "autoria": "dnv ",
-      "date": "01/10/2025"
-    },
-    {
       "id": "4c7d",
       "favorito": false,
       "conteudo": "Da vida reclama, mas sem ela não vive!",
@@ -82,12 +76,6 @@
       "conteudo": "Na minha máquina funciona!",
       "autoria": "Dev",
       "date": "10/01/2025"
-    },
-    {
-      "id": "bad5",
-      "conteudo": "teste",
-      "autoria": "teste",
-      "date": "07/10/2025"
     }
   ]
 }
