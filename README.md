@@ -18,8 +18,6 @@ Memoteca é um aplicativo organizador de pensamentos e frases que permite cadast
 
 `JavaScript`: Linguagem de programação utilizada para desenvolver a lógica do aplicativo.
 
-`Fetch API`: Utilizada para realizar requisições HTTP para comunicação com o servidor.
-
 `Axios`: Biblioteca usada para facilitar e simplificar as requisições HTTP.
 
 `Node.js`: Plataforma utilizada para executar o ambiente de desenvolvimento.
@@ -37,13 +35,7 @@ Você pode [acessar o figma do projeto aqui](https://www.figma.com/design/Sz1gmm
 
 Para executar a API fake, você vai precisar do NodeJS; a versão utilizada foi a 20.12.2.
 
-Instale o JSON Server globalmente (se ainda não estiver instalado):
-
-```bash
-npm install -g json-server
-```
-
-Para executar, abra um novo terminal e, dentro da pasta backend, execute:
+Para executar o backend (JSON Server), abra um terminal na pasta `backend` e rode:
 
 ```bash
 npm start
@@ -58,3 +50,26 @@ Para executar o frontend, abra o projeto no Visual Studio Code. Com a extensão 
 Acesse o frontend localmente em seu navegador:
 
 http://localhost:5500
+
+Como alternativa, você pode subir o backend a partir da raiz do projeto (script utilitário):
+
+```bash
+npm run start:backend
+```
+
+> Observação: esse comando apenas encaminha para o script do diretório `backend/`.
+
+## ✨ Mensagens interativas (Toasts)
+
+O projeto utiliza um sistema de notificações (toasts) para feedback ao usuário:
+
+- Sucesso: criação/edição, favoritar/desfavoritar, exclusão.
+- Erros: validações (conteúdo, autoria, data), falhas de rede/servidor.
+
+As mensagens aparecem no canto inferior direito e somem automaticamente após alguns segundos. O método está disponível em `ui.toast(mensagem, tipo, duração)`.
+
+Tipos suportados: `info`, `success`, `error` (padrão: `info`).
+
+## 🌐 Sobre GitHub Pages
+
+Este projeto usa um backend local (`json-server`). Se você publicar o frontend no GitHub Pages, ele não conseguirá se comunicar com `http://localhost:3000` (backend não acessível na nuvem). Para uso online, você precisaria hospedar o backend publicamente (ex.: serviço real/hosteado) ou adaptar o front para uma API pública existente.
