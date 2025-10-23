@@ -126,10 +126,9 @@ h2, h3 {
 #busca-container {
   display: flex;
   align-items: center;
-  margin-top: 56px;
+  margin: 56px auto 0; /* centraliza e dá margem superior */
   width: 100%; 
   max-width: 600px; 
-  margin: 56px auto; 
   padding: 0 16px; 
 }
 
@@ -339,4 +338,66 @@ span {
     align-content: flex-start;
     justify-content: space-between;
     align-items: center;
+}
+
+/* Data: use fonte baseada no sistema */
+.pensamento-data,
+.texto-data {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    "Noto Sans", "Liberation Sans", "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", sans-serif;
+}
+
+/* Centraliza a data no rodapé do card */
+.rodape-pensamento .texto-data {
+  flex: 1;
+  text-align: left;
+  margin: 0 0 0 20px; /* alinha com o recuo do texto acima */
+}
+
+/* Toasts */
+#toast-container {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 2000;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  opacity: 0;
+  transform: translateY(8px);
+  animation: toast-in 180ms ease-out forwards;
+}
+
+.toast.info { background: #144480; }
+.toast.success { background: #2e7d32; }
+.toast.error { background: #c62828; }
+
+.toast .close {
+  margin-left: 8px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toast-out {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(8px); }
 }

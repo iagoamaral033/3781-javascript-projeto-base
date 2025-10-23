@@ -1,25 +1,64 @@
 import api from "./api.js"
 
 const ui = {
+  toast(message, type = 'info', duration = 3000) {
+    const container = document.getElementById('toast-container')
+    if (!container) return alert(message)
+
+    const el = document.createElement('div')
+    el.className = `toast ${type}`
+    el.setAttribute('role', 'status')
+    el.innerHTML = `<span>${message}</span>`
+
+    const close = document.createElement('button')
+    close.className = 'close'
+    close.setAttribute('aria-label', 'Fechar')
+    close.textContent = '×'
+    close.onclick = () => removeToast()
+    el.appendChild(close)
+
+    container.appendChild(el)
+
+    let hideTimer = null
+    const removeToast = () => {
+      if (!el.isConnected) return
+      el.style.animation = 'toast-out 150ms ease-in forwards'
+      setTimeout(() => el.remove(), 160)
+    }
+    if (duration > 0) hideTimer = setTimeout(removeToast, duration)
+
+    return { close: removeToast }
+  },
 
   async preencherFormulario(pensamentoId) {
     const pensamento = await api.buscarPensamentoPorId(pensamentoId)
-    document.getElementById("pensamento-id").value = pensamento.id
-    document.getElementById("pensamento-conteudo").value = pensamento.conteudo
-    document.getElementById("pensamento-autoria").value = pensamento.autoria
-    const data = pensamento.date.split('/')
-    const dataFormatada = new Date(data[2], data[1] - 1, data[0]).toISOString().split('T')[0]
-    document.getElementById("pensamento-data").value = dataFormatada
+    const idEl = document.getElementById("pensamento-id")
+    const conteudoEl = document.getElementById("pensamento-conteudo")
+    const autoriaEl = document.getElementById("pensamento-autoria")
+    const dataEl = document.getElementById("pensamento-data")
+
+    if (idEl) idEl.value = pensamento.id ?? ""
+    if (conteudoEl) conteudoEl.value = pensamento.conteudo ?? ""
+    if (autoriaEl) autoriaEl.value = pensamento.autoria ?? ""
+    if (dataEl && pensamento.date) {
+      const data = pensamento.date.split('/')
+      const dataFormatada = new Date(data[2], data[1] - 1, data[0]).toISOString().split('T')[0]
+      dataEl.value = dataFormatada
+    }
   },
 
   limparFormulario() {
-    document.getElementById("pensamento-form").reset();
+    const form = document.getElementById("pensamento-form")
+    if (form) form.reset();
+    const idEl = document.getElementById("pensamento-id")
+    if (idEl) idEl.value = ""
   },
   
   async renderizarPensamentos(pensamentosFiltrados = null) {
-    const listaPensamentos = document.getElementById("lista-pensamentos")
-    const mensagemVazia = document.getElementById("mensagem-vazia")
-    listaPensamentos.innerHTML = ""
+  const listaPensamentos = document.getElementById("lista-pensamentos")
+  const mensagemVazia = document.getElementById("mensagem-vazia")
+  if (!listaPensamentos) return
+  listaPensamentos.innerHTML = ""
 
     try {
       let pensamentosParaRenderizar
@@ -31,9 +70,9 @@ const ui = {
       }
 
       if (pensamentosParaRenderizar.length === 0) {
-        mensagemVazia.style.display = "block"
+        if (mensagemVazia) mensagemVazia.style.display = "block"
       } else {
-        mensagemVazia.style.display = "none"
+        if (mensagemVazia) mensagemVazia.style.display = "none"
         pensamentosParaRenderizar
           .slice()
           .sort((a, b) => {
@@ -48,7 +87,7 @@ const ui = {
     }
     catch (error) {
       console.error(error)
-      alert('Erro ao renderizar pensamentos')
+      ui.toast('Erro ao renderizar pensamentos', 'error')
     }
   },
 
@@ -86,8 +125,9 @@ const ui = {
       try {
         await api.excluirPensamento(pensamento.id)
         ui.renderizarPensamentos()
+        ui.toast('Pensamento excluído', 'success')
       } catch (error) {
-        alert('Erro ao excluir pensamento')
+        ui.toast('Erro ao excluir pensamento', 'error')
       }
     }
     
@@ -100,10 +140,12 @@ const ui = {
     botaoFavorito.classList.add("botao-favorito")
     botaoFavorito.onclick = async () => {
       try {
-        await api.atualizarFavorito(pensamento.id, !pensamento.favorito)
+        const novoValor = !pensamento.favorito
+        await api.atualizarFavorito(pensamento.id, novoValor)
         ui.renderizarPensamentos()
+        ui.toast(novoValor ? 'Adicionado aos favoritos' : 'Removido dos favoritos', 'success')
       } catch (error) {
-        alert('Erro ao favoritar pensamento')
+        ui.toast('Erro ao atualizar favorito', 'error')
       }
     }
     
@@ -114,28 +156,26 @@ const ui = {
     iconeFavorito.alt = "Ícone de favorito"
     botaoFavorito.appendChild(iconeFavorito)
 
-    const divRodape = document.createElement("div")
-    divRodape.classList.add("rodape-pensamento")
+  const divRodape = document.createElement("div")
+  divRodape.classList.add("rodape-pensamento")
 
-    const textoData = document.createElement("p")
-    textoData.classList.add("texto-data")
-    
-    textoData.textContent = pensamento.date
-    divRodape.appendChild(textoData)
- 
-    const icones = document.createElement("div")
-    icones.classList.add("icones")
-    icones.appendChild(botaoFavorito)
-    icones.appendChild(botaoEditar)
-    icones.appendChild(botaoExcluir)
+  const textoData = document.createElement("p")
+  textoData.classList.add("texto-data")
+  textoData.textContent = pensamento.date
+  divRodape.appendChild(textoData)
 
-    divRodape.appendChild(icones)
-    pensamentoConteudo.appendChild(divRodape)
+  const icones = document.createElement("div")
+  icones.classList.add("icones")
+  icones.appendChild(botaoFavorito)
+  icones.appendChild(botaoEditar)
+  icones.appendChild(botaoExcluir)
 
-    li.appendChild(iconeAspas)
-    li.appendChild(pensamentoConteudo)
-    li.appendChild(pensamentoAutoria)
-    li.appendChild(divRodape)
+  divRodape.appendChild(icones)
+
+  li.appendChild(iconeAspas)
+  li.appendChild(pensamentoConteudo)
+  li.appendChild(pensamentoAutoria)
+  li.appendChild(divRodape)
     listaPensamentos.appendChild(li)
   },
 }
